@@ -11,7 +11,7 @@ on:
 # Prevent overlapping Hugo deployments
 concurrency:
   group: hugo-deployment
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 
 permissions:
@@ -28,16 +28,15 @@ jobs:
 
     steps:
 
-      - name: Checkout latest repository
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: recursive
 
 
-      - name: Ensure latest main branch
-        run: |
-          git pull origin main
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
 
       - name: Setup Hugo
@@ -56,7 +55,6 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./public
-
 
 
   deploy:
