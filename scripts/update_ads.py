@@ -204,12 +204,23 @@ def main():
     # SAVE FOR HUGO
     # =========================
 
-    os.makedirs("data", exist_ok=True)
-
-    with open("data/publications.json", "w") as f:
-        json.dump(output, f, indent=2)
-
-    print("Done → data/publications.json")
+    # =========================
+    # SAVE FOR HUGO
+    # =========================
+    
+    ROOT = Path(__file__).resolve().parent.parent
+    DATA_DIR = ROOT / "data"
+    DATA_DIR.mkdir(exist_ok=True)
+    
+    OUTPUT = DATA_DIR / "publications.json"
+    
+    print(f"Current working directory : {os.getcwd()}")
+    print(f"Writing output to         : {OUTPUT}")
+    
+    with open(OUTPUT, "w", encoding="utf-8") as f:
+        json.dump(output, f, indent=2, ensure_ascii=False)
+    
+    print(f"Successfully wrote {OUTPUT}")
 
 
 if __name__ == "__main__":
