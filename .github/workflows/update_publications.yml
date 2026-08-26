@@ -15,6 +15,8 @@ concurrency:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 
 jobs:
@@ -22,6 +24,9 @@ jobs:
   update-publications:
 
     runs-on: ubuntu-latest
+
+    outputs:
+      changed: ${{ steps.commit.outputs.changed }}
 
     steps:
 
@@ -52,20 +57,38 @@ jobs:
 
 
       - name: Commit publication update
+        id: commit
         run: |
-      
+
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-      
+
           git add data/publications.json
-      
+
           if git diff --cached --quiet; then
             echo "No publication changes detected."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-      
+
           git commit -m "Automatic publication update"
-      
+
           git pull --rebase origin main
-      
+
           git push
+
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+
+  deploy:
+
+    needs: update-publications
+
+    if: needs.update-publications.outputs.changed == 'true'
+
+    uses: ./.github/workflows/deploy-hugo.yml
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
