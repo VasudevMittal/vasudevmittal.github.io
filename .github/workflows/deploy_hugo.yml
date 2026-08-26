@@ -1,11 +1,19 @@
 name: Deploy Hugo Website
 
+
 on:
+
+  # Allows normal pushes to main to deploy the website.
+  # Note: pushes made using GITHUB_TOKEN do not trigger another workflow.
   push:
     branches:
       - main
 
+  # Allows manual deployment from the GitHub Actions UI.
   workflow_dispatch:
+
+  # Allows this workflow to be called by another workflow.
+  workflow_call:
 
 
 # Prevent overlapping Hugo deployments
@@ -66,7 +74,6 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
 
     steps:
 
