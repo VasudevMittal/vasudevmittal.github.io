@@ -86,7 +86,7 @@ jobs:
 
     if: needs.update-publications.outputs.changed == 'true'
 
-    uses: ./.github/workflows/deploy-hugo.yml
+    uses: ./.github/workflows/deploy_hugo.yml
 
     permissions:
       contents: read
